@@ -1,0 +1,81 @@
+name: CI & Publish
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  release:
+    types:
+      - published
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        
+      - name: Set up Python
+        run: uv python install ${{ matrix.python-version }}
+        
+      - name: Install dependencies and build extension
+        run: uv sync --python ${{ matrix.python-version }}
+
+      - name: Run Pytest
+        run: uv run --python ${{ matrix.python-version }} pytest test_rendering.py -v
+
+  build-wheels:
+    name: Build wheels on ${{ matrix.os }}
+    # Only run the wheel builder if this is a tag/release publish
+    if: github.event_name == 'release' && github.event.action == 'published'
+    runs-on: ${{ matrix.os }}
+    needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          target: all
+          args: --release --out dist -i 3.10 3.11 3.12 3.13 3.14
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}
+          path: dist
+
+  publish:
+    name: Publish to PyPI
+    needs: build-wheels
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+    environment:
+      name: pypi
+      url: https://pypi.org/p/markdown-katex-rs
+    permissions:
+      id-token: write  # required for trusted publishing
+      contents: read
+    
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          merge-multiple: true
+          path: dist
+          
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
