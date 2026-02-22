@@ -130,7 +130,7 @@ def iter_inline_katex(line: str) -> typ.Iterable[InlineCodeItem]:
 
         yield InlineCodeItem(inline_text, start - 1, end + 2)
 
-class KatexExtension(Extension):
+class KatexRsExtension(Extension):
     def __init__(self, **kwargs) -> None:
         self.config = {
             'no_inline_svg'   : ["", "Replace inline <svg> with <img> tags."],
@@ -148,16 +148,16 @@ class KatexExtension(Extension):
         self.math_html.clear()
 
     def extendMarkdown(self, md) -> None:
-        preproc = KatexPreprocessor(md, self)
+        preproc = KatexRsPreprocessor(md, self)
         md.preprocessors.register(preproc, name='katex_fenced_code_block', priority=50)
 
-        postproc = KatexPostprocessor(md, self)
+        postproc = KatexRsPostprocessor(md, self)
         md.postprocessors.register(postproc, name='katex_fenced_code_block', priority=0)
         md.registerExtension(self)
 
 
-class KatexPreprocessor(Preprocessor):
-    def __init__(self, md, ext: KatexExtension) -> None:
+class KatexRsPreprocessor(Preprocessor):
+    def __init__(self, md, ext: KatexRsExtension) -> None:
         super().__init__(md)
         self.ext = ext
 
@@ -227,8 +227,8 @@ class KatexPreprocessor(Preprocessor):
         return list(self._iter_out_lines(lines))
 
 
-class KatexPostprocessor(Postprocessor):
-    def __init__(self, md, ext: KatexExtension) -> None:
+class KatexRsPostprocessor(Postprocessor):
+    def __init__(self, md, ext: KatexRsExtension) -> None:
         super().__init__(md)
         self.ext = ext
 
@@ -249,6 +249,6 @@ class KatexPostprocessor(Postprocessor):
                         else:
                             text = text.replace(marker, html)
                 else:
-                    logger.warning(f"KatexPostprocessor couldn't find: {marker}")
+                    logger.warning(f"KatexRsPostprocessor couldn't find: {marker}")
 
         return text

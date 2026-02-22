@@ -16,3 +16,8 @@ dependencies = [
 features = ["pyo3/extension-module"]
 python-source = "python"
 module-name = "markdown_katex_rs._rust"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]

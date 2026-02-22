@@ -1,4 +1,4 @@
-from .extension import KatexExtension
+from .extension import KatexRsExtension
 
 def makeExtension(**kwargs):
-    return KatexExtension(**kwargs)
+    return KatexRsExtension(**kwargs)
