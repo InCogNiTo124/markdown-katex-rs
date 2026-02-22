@@ -1,0 +1,18 @@
+[build-system]
+requires = ["maturin>=1.5"]
+build-backend = "maturin"
+
+[project]
+name = "markdown-katex-rs"
+version = "0.1.0"
+description = "Markdown KaTeX extension backed by Rust"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "Markdown>=3.0",
+]
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+python-source = "python"
+module-name = "markdown_katex_rs._rust"
