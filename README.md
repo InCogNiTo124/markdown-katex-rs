@@ -2,11 +2,11 @@
 
 A fast, Rust-backed [KaTeX](https://katex.org/) extension for the [Python Markdown](https://python-markdown.github.io/) library.
 
-This project is a drop-in modernization of `mbarkhau/markdown-katex`, utilizing the `katex-rs` crate via PyO3 for significantly improved rendering performance without needing a separate JavaScript runtime or slow CLI bindings.
+This project aspires to be a drop-in replacement for `mbarkhau/markdown-katex`. The main difference is, instead of shipping node and katex binaries, it's using the `katex-rs` crate via PyO3 for significantly improved rendering performance and smaller distribution size.
 
 ## Requirements
 
-- Python 3.12+ 
+- Python 3.10+ 
 
 ## Installation
 
@@ -66,16 +66,6 @@ To trigger a release to PyPI:
 2. Create and publish a new Release in the GitHub UI (i.e., `v0.1.0`).
 3. The Action will automatically execute and handle the heavy lifting of publishing.
 
-## Local Integration Testing
-
-If you want to test the extension in a separate local project before publishing to PyPI:
-
-1. Build the local wheel via `uv build`. This will place a `.whl` file in the `dist/` directory.
-2. In your target project (where you want to test the extension), install the built package directly from the path:
-
-```bash
-uv add /path/to/markdown-katex-rs/dist/markdown_katex_rs-0.1.0-cp312-cp312-linux_x86_64.whl
-```
 
 *(Note: The wheel filename will vary depending on your OS, Python version, and system architecture.)*
 
