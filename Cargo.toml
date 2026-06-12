@@ -9,4 +9,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 katex-rs = "0.2.3"
-pyo3 = { version = "0.28.2", features = ["extension-module"] }
+pyo3 = { version = "0.29.0", features = ["extension-module"] }
