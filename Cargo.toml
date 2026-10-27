@@ -1,6 +1,6 @@
 [package]
 name = "markdown-katex-rs"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 [lib]
@@ -8,5 +8,5 @@ name = "_rust"
 crate-type = ["cdylib"]
 
 [dependencies]
-katex-rs = "0.2.3"
+katex-rs = "0.3.0"
 pyo3 = { version = "0.28.2", features = ["extension-module"] }
